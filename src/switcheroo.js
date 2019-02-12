@@ -1,11 +1,10 @@
-import request from './request';
-import loading from './loading';
 import u from 'umbrellajs';
+
+let getXML;
+let cache = {};
 
 const msgPrefix = 'Switcheroo:';
 const prefix = 'data-switcheroo';
-
-let cache = {};
 const selectors = {
     target: `${prefix}-target`,
     content: '#_content_', //should only be set to value after item is fetched.
@@ -82,11 +81,8 @@ let render = (switcheroo, content) => {
 
 let fetchAndRender = (switcheroo, url) => {
     switcheroo.element.classList.toggle('switcheroo-loading');
-    switcheroo.isLoading = true;
-    request.getXML(url)
+    getXML(url)
         .then((fragment) => {
-            switcheroo.isLoading = false;
-
             let options = switcheroo.options;
             let f = fragment.body.children[0];
             
@@ -146,7 +142,8 @@ let onClick = (switcheroo, e) => {
 
     if (options.accordion && url && cache[url]) {
         switcheroo.content.classList.toggle('d-none');
-        options.toggleClass.split(' ')
+        options.toggleClass
+            .split(' ')
             .forEach(className => switcheroo.element.classList.toggle(className));
     } else if (!switcheroo.isLoading) {
         if (cache[url])
@@ -175,34 +172,50 @@ let initialize = (elements, callback) => {
     });
 };
 
+function switcheroo(config) {
+    getXML = config.getXML;
+    if (!getXML || typeof getXML != 'function') {
+        console.error(`${msgPrefix} Missing getXML function.`);
+        return;
+    }
 
+    const missingGetXml = `${msgPrefix} the required getXml() function is undefined. See documentation for usage.`;
 
-export default {
-    run: (elements, callback) => {
-        if (arguments.length < 2) {
-            console.error(`${msgPrefix} Missing parameter. switcheroo.run() should be called with parameters (element, callback).`);
-            return;
-        }
+    return {
+        run: (elements, callback) => {
+            if (!getXML)
+                console.error(missingGetXml);
 
-        if (elements && NodeList.prototype.isPrototypeOf(elements)) {
-            elements = u(elements).nodes;
-        }
+            if (arguments.length < 2) {
+                console.error(`${msgPrefix} Missing parameter. switcheroo.run() should be called with parameters (element, callback).`);
+                return;
+            }
+    
+            if (elements && NodeList.prototype.isPrototypeOf(elements)) {
+                elements = u(elements).nodes;
+            }
+    
+            let count = elements.filter(doesNotHaveId).length;
+            if (count !== elements.length) {
+                console.warn(`${msgPrefix} Missing 'data-switcheroo-id' on some elements. Consider adding 'data-switcheroo-id' to prevent duplicate initialization when using switcheroo.autoStart().`);
+            }
+    
+            initialize(elements, callback);
+        },
+    
+        autoStart: () => {
+            if (!getXML)
+                console.error(missingGetXml);
 
-        let count = elements.filter(doesNotHaveId);
-        if (count !== elements.length) {
-            console.warn(`${msgPrefix} Missing 'data-switcheroo-id' on some elements. Consider adding 'data-switcheroo-id' to prevent duplicate initialization when using switcheroo.autoStart().`);
-        }
+            //cannot pass a callback to auto-initialized elements
+            let elements = u(`[${selectors.target}]`)
+                .filter(doesNotHaveId)
+                .nodes;
+            
+            initialize(elements);
+        }, 
+        selectors
+    };
+}
 
-        initialize(elements, callback);
-    },
-
-    autoStart: () => {
-        //cannot pass a callback to auto-initialized elements
-        let elements = u(`[${selectors.target}]`)
-            .filter(doesNotHaveId)
-            .nodes;
-        
-        initialize(elements);
-    }, 
-    selectors
-};
+export default switcheroo;
