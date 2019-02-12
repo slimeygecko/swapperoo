@@ -26,7 +26,11 @@
  */
 ```
 
-The purpose of `Switcheroo` is to overcome some of the challenges that come with a website that needs full html support and async views or partial views. 
+The purpose of `Switcheroo` is to overcome some of the challenges that come with a website that needs full html support and async views or partial views.
+
+Iframes give web pages the ability to asynchronously load individual parts of a page. Unfortunately, that comes with a price: the bounding box that is rather difficult to deal with although [not](https://blog.theodo.fr/2018/01/responsive-iframes-css-trick/) [impossible.](https://davidwalsh.name/responsive-iframes)
+
+
 
 # Use Cases
 ### Iframes
