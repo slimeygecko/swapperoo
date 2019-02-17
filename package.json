@@ -9,7 +9,7 @@
     "watch": "npx webpack --config webpack.dev.js --watch ",
     "open": "npm start & wait-on http://localhost:8080 && cypress open",
     "start": "nodemon server.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "cypress open"
   },
   "repository": {
     "type": "git",

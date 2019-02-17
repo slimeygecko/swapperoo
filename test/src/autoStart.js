@@ -1,4 +1,4 @@
-import switcheroo from '../src/switcheroo';
+import switcheroo from '../../src/switcheroo';
 import axios from 'axios';
 
 switcheroo({

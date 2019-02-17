@@ -2,9 +2,12 @@ const path = require('path');
 
 module.exports = {
   mode: 'development',
-  entry: './test/index.js',
+  entry: {
+    autoStart: './test/src/autoStart.js'
+    , run: './test/src/run.js'
+  },
   output: {
-    filename: 'test.js',
+    filename: '[name].js',
     path: path.resolve(__dirname, 'test/dist')
   }
 };
