@@ -5,6 +5,7 @@
   "main": "index.js",
   "scripts": {
     "build:prod": "npx webpack --config webpack.prod.js",
+    "publish": "npx webpack --config webpack.prod.js",
     "build": "npx webpack --config webpack.dev.js",
     "watch": "npx webpack --config webpack.dev.js --watch ",
     "open": "npm start & wait-on http://localhost:8080 && cypress open",
