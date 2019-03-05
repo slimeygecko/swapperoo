@@ -8,10 +8,16 @@ module.exports = function(url) {
             .should('have.id', 'roo')
             .and('have.prop', 'tagName' )
             .should('eq', 'DIV');
-    });
 
-    it('Should have only one div on the page', function() {
+        cy.get('iframe')
+            .should('have.length', 0);
+
         cy.get('div')
             .should('have.length', 1);
     });
+
+    // it('Should have only one div on the page', function() {
+    //     cy.get('div')
+    //         .should('have.length', 1);
+    // });
 }

@@ -1,4 +1,4 @@
-import u from 'umbrellajs';
+import { queryAll, replace, toArray, append } from './domHelpers';
 
 let getXML;
 let cache = {};
@@ -32,7 +32,7 @@ let doesNotHaveId = (el) => !el.getAttribute(selectors.id);
 
 let makeSwitcheroo = function (element, callback) {
     let options = getElementOptions(element);
-    let target = u(`${options.target}`).first();
+    let target = queryAll(`${options.target}`)[0];
     let switcheroo = { 
         callback
         , element
@@ -59,9 +59,9 @@ let render = (switcheroo, content) => {
         switcheroo.element.appendChild(content);
     } else {
         if (switcheroo.options.append === 'append') {
-            switcheroo.target.appendChild(content);
+            append(content, switcheroo.target);
         } else {
-            u(switcheroo.target).replace(content);
+            replace(content, switcheroo.target);
         }
     }
 
@@ -70,8 +70,8 @@ let render = (switcheroo, content) => {
 
     if (isIframe || (switcheroo.options.accordion && cache[switcheroo.options.url])) {
         let scope = switcheroo.target && switcheroo.target.isConnected ? switcheroo.target : (content.isConnected ? content : undefined);
-        let elements = u(`[${selectors.target}]`, scope).nodes;
-        let accordions = u(`[${selectors.accordion}]`, scope).nodes;
+        let elements = queryAll(`[${selectors.target}]`, scope);
+        let accordions = queryAll(`[${selectors.accordion}]`, scope);
         let everything = elements.concat(accordions)
             .filter(doesNotHaveId);
 
@@ -103,7 +103,7 @@ let fetchAndRender = (switcheroo, url) => {
             } else {
                 console.error(`${msgPrefix} Empty fragment or error retrieved from: ${url}`);
                 if (options.errorClass && !switcheroo.element.classList.contains(options.errorClass)) {
-                    switcheroo.element.addClass(options.errorClass);
+                    switcheroo.element.classList.add(options.errorClass);
                 }
             }
         });
@@ -114,8 +114,8 @@ let onLoad = (switcheroo) => {
     const doc = getDocument(switcheroo.element);
 
     if (!doc.title.includes('Error')) {
-        u(container).append(u(doc.body.children))
-        switcheroo.target = u(switcheroo.options.target).first();
+        append(doc.body.children, container);
+        switcheroo.target = queryAll(switcheroo.options.target)[0];
         container.id = switcheroo.target.id;
         switcheroo.content = container;
         render(switcheroo, container);
@@ -133,7 +133,7 @@ let onClick = (switcheroo, e) => {
     let options = switcheroo.options;
     let url = options.url || e.currentTarget.href;
 
-    switcheroo.target = u(options.target).first();
+    switcheroo.target = queryAll(options.target)[0];
 
     if ((!url && !options.accordion) || !url) {
         console.error(`${msgPrefix} url is not defined and/or accordion option is not enabled.`);
@@ -158,7 +158,7 @@ let initialize = (elements, callback) => {
         let switcheroo = makeSwitcheroo(element, callback);
 
         if (element.nodeName === "IFRAME") {
-            u(element).addClass('hidden');
+            element.classList.add('hidden');
             
             let doc = getDocument(element);
             if (doc.body && doc.body.children.length) {
@@ -167,7 +167,7 @@ let initialize = (elements, callback) => {
                 element.onload = onLoad.bind(this, switcheroo);
             }
         } else {
-            u(element).on('click', onClick.bind(this, switcheroo));
+            element.addEventListener('click', onClick.bind(this, switcheroo));
         }
     });
 };
@@ -187,19 +187,19 @@ function switcheroo(config) {
                 console.error(missingGetXml);
 
             if (arguments.length < 2) {
-                console.error(`${msgPrefix} Missing parameter. switcheroo.run() should be called with parameters (element, callback).`);
+                console.error(`${msgPrefix} Missing parameter. switcheroo.run() should be called with parameters (elements, callback).`);
                 return;
             }
     
             if (elements && NodeList.prototype.isPrototypeOf(elements)) {
-                elements = u(elements).nodes;
+                elements = toArray(elements);
             }
     
             let count = elements.filter(doesNotHaveId).length;
             if (count !== elements.length) {
                 console.warn(`${msgPrefix} Missing 'data-switcheroo-id' on some elements. Consider adding 'data-switcheroo-id' to prevent duplicate initialization when using switcheroo.autoStart().`);
             }
-    
+
             initialize(elements, callback);
         },
     
@@ -208,9 +208,8 @@ function switcheroo(config) {
                 console.error(missingGetXml);
 
             //cannot pass a callback to auto-initialized elements
-            let elements = u(`[${selectors.target}]`)
-                .filter(doesNotHaveId)
-                .nodes;
+            let elements = queryAll('[data-switcheroo-target]')
+                .filter(doesNotHaveId);
             
             initialize(elements);
         }, 
