@@ -1,5 +1,5 @@
-import swaperooTests from './swaperooTests';
+import swapperooTests from './swapperooTests';
 
 describe('Swapperoo with fragment server response', function() {
-  swaperooTests('http://localhost:8080/fragment.html');
+  swapperooTests('http://localhost:8080/fragment.html');
 });
