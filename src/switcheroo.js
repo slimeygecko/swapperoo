@@ -174,18 +174,14 @@ let initialize = (elements, callback) => {
 
 function switcheroo(config) {
     getXML = config.getXML;
-    if (!getXML || typeof getXML != 'function') {
-        console.error(`${msgPrefix} Missing getXML function.`);
+
+    if (!getXML || typeof getXML !== 'function') {
+        console.error(`${msgPrefix} the required getXml() function is undefined. See documentation for usage.`);
         return;
     }
 
-    const missingGetXml = `${msgPrefix} the required getXml() function is undefined. See documentation for usage.`;
-
     return {
         run: (elements, callback) => {
-            if (!getXML)
-                console.error(missingGetXml);
-
             if (arguments.length < 2) {
                 console.error(`${msgPrefix} Missing parameter. switcheroo.run() should be called with parameters (elements, callback).`);
                 return;
@@ -195,8 +191,7 @@ function switcheroo(config) {
                 elements = toArray(elements);
             }
     
-            let count = elements.filter(doesNotHaveId).length;
-            if (count !== elements.length) {
+            if (elements.filter(doesNotHaveId).length !== elements.length) {
                 console.warn(`${msgPrefix} Missing 'data-switcheroo-id' on some elements. Consider adding 'data-switcheroo-id' to prevent duplicate initialization when using switcheroo.autoStart().`);
             }
 
@@ -204,9 +199,6 @@ function switcheroo(config) {
         },
     
         autoStart: () => {
-            if (!getXML)
-                console.error(missingGetXml);
-
             //cannot pass a callback to auto-initialized elements
             let elements = queryAll('[data-switcheroo-target]')
                 .filter(doesNotHaveId);
