@@ -1,3 +1,3 @@
-import switcheroo from './switcheroo';
+import {swapperoo} from './swapperoo';
 
-export default switcheroo;
+export default swapperoo;

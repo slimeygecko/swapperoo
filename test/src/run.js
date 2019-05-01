@@ -1,4 +1,4 @@
-import switcheroo from '../../src/switcheroo';
+import {swapperoo} from '../../src/swapperoo';
 import axios from 'axios';
 
 let elements = document.querySelectorAll('');
@@ -6,7 +6,7 @@ let callback = () => {
 
 };
 
-switcheroo({
+swapperoo({
     getXML: function(url) {
         return axios.get(url, {
             method: 'get'

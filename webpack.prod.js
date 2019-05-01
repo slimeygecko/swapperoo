@@ -2,9 +2,9 @@ const path = require('path');
 
 module.exports = {
   mode: 'production',
-  entry: './src/switcheroo.js',
+  entry: './src/swapperoo.js',
   output: {
-    filename: 'switcheroo.min.js',
+    filename: 'swapperoo.min.js',
     path: path.resolve(__dirname, 'dist')
   }
 };

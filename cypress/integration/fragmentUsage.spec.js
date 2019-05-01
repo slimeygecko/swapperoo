@@ -1,5 +1,5 @@
-import switcherooTests from './switcherooTests';
+import swaperooTests from './swaperooTests';
 
-describe('Switcheroo with fragment server response', function() {
-  switcherooTests('http://localhost:8080/fragment.html');
+describe('Swapperoo with fragment server response', function() {
+  swaperooTests('http://localhost:8080/fragment.html');
 });

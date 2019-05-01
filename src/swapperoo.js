@@ -3,8 +3,8 @@ import { queryAll, replace, toArray, append } from './domHelpers';
 let getXML;
 let cache = {};
 
-const msgPrefix = 'Switcheroo:';
-const prefix = 'data-switcheroo';
+const msgPrefix = 'Swapperoo:';
+const prefix = 'data-swapperoo';
 const selectors = {
     target: `${prefix}-target`,
     content: '#_content_', //should only be set to value after item is fetched.
@@ -30,10 +30,10 @@ let getElementOptions = (element) => {
 
 let doesNotHaveId = (el) => !el.getAttribute(selectors.id);
 
-let makeSwitcheroo = function (element, callback) {
+let makeSwapperoo = function (element, callback) {
     let options = getElementOptions(element);
     let target = queryAll(`${options.target}`)[0];
-    let switcheroo = { 
+    let swapperoo = { 
         callback
         , element
         , options
@@ -41,35 +41,35 @@ let makeSwitcheroo = function (element, callback) {
         , isLoading: false
     };
 
-    if (!switcheroo.target && !switcheroo.options.accordion) {
+    if (!swapperoo.target && !swapperoo.options.accordion) {
         console.error(`${msgPrefix} Cannot find target node from selector: ${target} on element:`, element);
         return;
     }
-    return switcheroo;
+    return swapperoo;
 };
 
 let toggleClassNames = (element, classNames) =>
     classNames.split(' ')
         .forEach(className => element.classList.toggle(className));
 
-let render = (switcheroo, content) => {
-    let isIframe = switcheroo.element.nodeName === 'IFRAME';
+let render = (swapperoo, content) => {
+    let isIframe = swapperoo.element.nodeName === 'IFRAME';
 
-    if (switcheroo.options.accordion) {
-        switcheroo.element.appendChild(content);
+    if (swapperoo.options.accordion) {
+        swapperoo.element.appendChild(content);
     } else {
-        if (switcheroo.options.append === 'append') {
-            append(content, switcheroo.target);
+        if (swapperoo.options.append === 'append') {
+            append(content, swapperoo.target);
         } else {
-            replace(content, switcheroo.target);
+            replace(content, swapperoo.target);
         }
     }
 
-    if (switcheroo.callback)
-        switcheroo.callback(switcheroo);
+    if (swapperoo.callback)
+        swapperoo.callback(swapperoo);
 
-    if (isIframe || (switcheroo.options.accordion && cache[switcheroo.options.url])) {
-        let scope = switcheroo.target && switcheroo.target.isConnected ? switcheroo.target : (content.isConnected ? content : undefined);
+    if (isIframe || (swapperoo.options.accordion && cache[swapperoo.options.url])) {
+        let scope = swapperoo.target && swapperoo.target.isConnected ? swapperoo.target : (content.isConnected ? content : undefined);
         let elements = queryAll(`[${selectors.target}]`, scope);
         let accordions = queryAll(`[${selectors.accordion}]`, scope);
         let everything = elements.concat(accordions)
@@ -79,61 +79,61 @@ let render = (switcheroo, content) => {
     }
 };
 
-let fetchAndRender = (switcheroo, url) => {
-    switcheroo.element.classList.toggle('switcheroo-loading');
+let fetchAndRender = (swapperoo, url) => {
+    swapperoo.element.classList.toggle('swapperoo-loading');
     getXML(url)
         .then((fragment) => {
-            let options = switcheroo.options;
+            let options = swapperoo.options;
             let f = fragment.body.children[0];
             
             if (f && !fragment.title.includes('Error')) {
                 cache[url] = f;
-                switcheroo.content = f;
-                render(switcheroo, f);
+                swapperoo.content = f;
+                render(swapperoo, f);
 
-                switcheroo.element.classList.remove('switcheroo-loading');
+                swapperoo.element.classList.remove('swapperoo-loading');
 
                 if (options.errorClass) {
-                    switcheroo.element.classList.remove(options.errorClass);
+                    swapperoo.element.classList.remove(options.errorClass);
                 }
 
                 if (options.accordion) {
-                    toggleClassNames(switcheroo.element, options.toggleClass);
+                    toggleClassNames(swapperoo.element, options.toggleClass);
                 }
             } else {
                 console.error(`${msgPrefix} Empty fragment or error retrieved from: ${url}`);
-                if (options.errorClass && !switcheroo.element.classList.contains(options.errorClass)) {
-                    switcheroo.element.classList.add(options.errorClass);
+                if (options.errorClass && !swapperoo.element.classList.contains(options.errorClass)) {
+                    swapperoo.element.classList.add(options.errorClass);
                 }
             }
         });
 };
 
-let onLoad = (switcheroo) => {
+let onLoad = (swapperoo) => {
     const container = document.createElement("div");
-    const doc = getDocument(switcheroo.element);
+    const doc = getDocument(swapperoo.element);
 
     if (!doc.title.includes('Error')) {
         append(doc.body.children, container);
-        switcheroo.target = queryAll(switcheroo.options.target)[0];
-        container.id = switcheroo.target.id;
-        switcheroo.content = container;
-        render(switcheroo, container);
+        swapperoo.target = queryAll(swapperoo.options.target)[0];
+        container.id = swapperoo.target.id;
+        swapperoo.content = container;
+        render(swapperoo, container);
     } else {
-        loading.failed(switcheroo.target);
-        switcheroo.element.remove();
+        loading.failed(swapperoo.target);
+        swapperoo.element.remove();
     }
 };
 
-let onClick = (switcheroo, e) => {
+let onClick = (swapperoo, e) => {
     //TODO: push/pop navigation history
     e.preventDefault();
     e.stopPropagation();
 
-    let options = switcheroo.options;
+    let options = swapperoo.options;
     let url = options.url || e.currentTarget.href;
 
-    switcheroo.target = queryAll(options.target)[0];
+    swapperoo.target = queryAll(options.target)[0];
 
     if ((!url && !options.accordion) || !url) {
         console.error(`${msgPrefix} url is not defined and/or accordion option is not enabled.`);
@@ -141,38 +141,38 @@ let onClick = (switcheroo, e) => {
     }
 
     if (options.accordion && url && cache[url]) {
-        switcheroo.content.classList.toggle('d-none');
+        swapperoo.content.classList.toggle('d-none');
         options.toggleClass
             .split(' ')
-            .forEach(className => switcheroo.element.classList.toggle(className));
-    } else if (!switcheroo.isLoading) {
+            .forEach(className => swapperoo.element.classList.toggle(className));
+    } else if (!swapperoo.isLoading) {
         if (cache[url])
-            render(switcheroo, cache[url]);
+            render(swapperoo, cache[url]);
         else
-            fetchAndRender(switcheroo, url);
+            fetchAndRender(swapperoo, url);
     }
 };
 
 let initialize = (elements, callback) => {
     elements.forEach(function (element) {
-        let switcheroo = makeSwitcheroo(element, callback);
+        let swapperoo = makeSwapperoo(element, callback);
 
         if (element.nodeName === "IFRAME") {
             element.classList.add('hidden');
             
             let doc = getDocument(element);
             if (doc.body && doc.body.children.length) {
-                onLoad(switcheroo);
+                onLoad(swapperoo);
             } else {
-                element.onload = onLoad.bind(this, switcheroo);
+                element.onload = onLoad.bind(this, swapperoo);
             }
         } else {
-            element.addEventListener('click', onClick.bind(this, switcheroo));
+            element.addEventListener('click', onClick.bind(this, swapperoo));
         }
     });
 };
 
-function switcheroo(config) {
+export function swapperoo(config) {
     getXML = config.getXML;
 
     if (!getXML || typeof getXML !== 'function') {
@@ -183,7 +183,7 @@ function switcheroo(config) {
     return {
         run: (elements, callback) => {
             if (arguments.length < 2) {
-                console.error(`${msgPrefix} Missing parameter. switcheroo.run() should be called with parameters (elements, callback).`);
+                console.error(`${msgPrefix} Missing parameter. swapperoo.run() should be called with parameters (elements, callback).`);
                 return;
             }
     
@@ -192,7 +192,7 @@ function switcheroo(config) {
             }
     
             if (elements.filter(doesNotHaveId).length !== elements.length) {
-                console.warn(`${msgPrefix} Missing 'data-switcheroo-id' on some elements. Consider adding 'data-switcheroo-id' to prevent duplicate initialization when using switcheroo.autoStart().`);
+                console.warn(`${msgPrefix} Missing 'data-swapperoo-id' on some elements. Consider adding 'data-swapperoo-id' to prevent duplicate initialization when using swapperoo.autoStart().`);
             }
 
             initialize(elements, callback);
@@ -200,7 +200,7 @@ function switcheroo(config) {
     
         autoStart: () => {
             //cannot pass a callback to auto-initialized elements
-            let elements = queryAll('[data-switcheroo-target]')
+            let elements = queryAll('[data-swapperoo-target]')
                 .filter(doesNotHaveId);
             
             initialize(elements);
@@ -208,5 +208,3 @@ function switcheroo(config) {
         selectors
     };
 }
-
-export default switcheroo;

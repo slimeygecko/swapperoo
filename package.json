@@ -1,11 +1,10 @@
 {
-  "name": "switcheroo",
+  "name": "swapperoo",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
   "scripts": {
     "build:prod": "npx webpack --config webpack.prod.js",
-    "publish": "npx webpack --config webpack.prod.js",
     "build": "npx webpack --config webpack.dev.js",
     "watch": "npx webpack --config webpack.dev.js --watch ",
     "open": "npm start & wait-on http://localhost:8080 && cypress open",
@@ -14,14 +13,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/slimeygecko/switcheroo.git"
+    "url": "git+https://github.com/slimeygecko/swapperoo.git"
   },
   "author": "Mike Woodward",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/slimeygecko/switcheroo/issues"
+    "url": "https://github.com/slimeygecko/swapperoo/issues"
   },
-  "homepage": "https://github.com/slimeygecko/switcheroo#readme",
+  "homepage": "https://github.com/slimeygecko/swapperoo#readme",
   "devDependencies": {
     "axios": "^0.18.0",
     "cypress": "^3.1.5",

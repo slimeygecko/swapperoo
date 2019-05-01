@@ -1,5 +1,5 @@
-import switcherooTests from './switcherooTests';
+import swapperooTests from './swapperooTests';
 
-describe('Switcheroo with HTML page server response', function() {
-  switcherooTests('http://localhost:8080/page.html');
+describe('Swapperoo with HTML page server response', function() {
+  swapperooTests('http://localhost:8080/page.html');
 });
