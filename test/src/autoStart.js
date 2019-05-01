@@ -1,7 +1,7 @@
-import switcheroo from '../../src/switcheroo';
+import {swapperoo} from '../../src/swapperoo';
 import axios from 'axios';
 
-switcheroo({
+swapperoo({
     getXML: function(url) {
         return axios.get(url, {
             method: 'get'
