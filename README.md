@@ -1,6 +1,5 @@
 ```
 /*
- *  
  *                                                     MM MM           ,MMMMMM                               M
  *                                                     MMMM         MMMMMMMMMMMMMM                          M
  *                                                     MMMM       MMMMMMMMMMMMMMMMMMI                     .M$
@@ -10,27 +9,24 @@
  *                                                 MMMMMM MMMMMMMMMMMMMMMMMMMMMMMMM      NMMMMMMMMM
  *                                                         MMMMMMMMMMMMMMMMMMMMMMM
  *                                                          MMMMMMMMMMMMMMMMMM
- *                                                            MMMMMMMMMMMM+
- *  __          _ _       _                                     MMMMMMMMMMM
- *  / _\_      _(_) |_ ___| |__   ___ _ __ ___   ___             MMMM MMMMM
- *  \ \\ \ /\ / / | __/ __| '_ \ / _ \ '__/ _ \ / _ \                 :MMMM
- *  _\ \\ V  V /| | || (__| | | |  __/ | | (_) | (_) |                 MMMM
- *  \__/ \_/\_/ |_|\__\___|_| |_|\___|_|  \___/ \___/                  MMMM
- *                                                                 MMMMMM
- *                                                              ,MMMMMMM~
- *                                                           8MMMMMMMM
- *                                                         MMMMMMMM
- *                                                        MMMMMM
- *                                                         MMMM
- * 
+ *     __                                                    MMMMMMMMMMMM+
+ *    / _\_      ____ _ _ __  _ __   ___ _ __ ___   ___      MMMMMMMMMMM
+ *    \ \\ \ /\ / / _` | '_ \| '_ \ / _ \ '__/ _ \ / _ \      MMMM MMMMM
+ *    _\ \\ V  V / (_| | |_) | |_) |  __/ | | (_) | (_) |          :MMMM
+ *    \__/ \_/\_/ \__,_| .__/| .__/ \___|_|  \___/ \___/            MMMM
+ *                     |_|   |_|                                    MMMM
+ *                                                               MMMMMM
+ *                                                            ,MMMMMMM~
+ *                                                        8MMMMMMMM
+ *                                                      MMMMMMMM
+ *                                                     MMMMMM
+ *                                                      MMMM
  */
 ```
 
 The purpose of `Swapperoo` is to overcome some of the challenges that come with a website that needs full html functionality (no javascript) with the ability to load sections of the page asynchronously. 
 
 Iframes give web pages the ability to asynchronously load individual parts of a page. Unfortunately, that comes with a price: the bounding box that is rather difficult to deal with.
-
-
 
 # Use Cases
 ### Iframes
