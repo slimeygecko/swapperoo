@@ -24,56 +24,49 @@
  */
 ```
 
-The purpose of `Swapperoo` is to overcome some of the challenges that come with a website that needs full html support and async views or partial views. 
+The purpose of `Swapperoo` is to overcome some of the challenges that come with a website that needs full html functionality (no javascript) with the ability to load sections of the page asynchronously. 
+
+Iframes give web pages the ability to asynchronously load individual parts of a page. Unfortunately, that comes with a price: the bounding box that is rather difficult to deal with.
 
 # Use Cases
 ### Iframes
 >  Replacing iframes that have been used to load parts of the page that would significantly slow down the page load time, such as a report.
 
-A good example of this is the volume section of the [distributor's profile page](http://servervm-web:8080/distributors/21005640#Volumes). This section is actually an `iframe` that, by nature of an `iframe`, load's after the initial page is rendered. Iframes do not resize or flow with the rest of the page, so `Swapperoo` swaps out the `iframe` for a `div` after the `iframe` has finished loading. This enables the section to flow properly with the rest of the page and eliminates scroll bars that come with overflowed content within an `iframe`.
+This section is actually an `iframe` that, by nature of an `iframe`, load's after the initial page is rendered. Iframes do not resize or flow with the rest of the page, so `Swapperoo` swaps out the `iframe` for a `div` after the `iframe` has finished loading. This enables the section to flow properly with the rest of the page and eliminates scroll bars that come with overflowed content within an `iframe`.
 
 ```html
     <div id="roo">
-        <iframe data-swapperoo-target="#roo" src="url"></iframe>
+        <iframe data-swapperoo-target="#roo" src="/some/async/url"></iframe>
     </div>
 ```
 ```js
 swapperoo.autoStart();
 ```
 
-
-**Full Example:** (Include the loading partial for a nice set of loading dots.)
-```html
-    <div id="downline" class="embed-responsive embed-responsive-16by9">
-        @await Html.PartialAsync("_Loading")
-        <iframe data-swapperoo-target="#downline" class="embed-responsive-item" src="@Url.Action("Downline", "Distributors", new {Model.DistributorId, Model.DownlineDate, Model.OnlyIncludeOperational})"></iframe>
-    </div>
-```
 ### Async view loading
 >  Loading part of the page after user interaction, such as the click of a button.
 
 **Form submissions**
-When clicking the submit button, `Swapperoo` will submit the form via ajax and prevent a page reload. On a successful request, the `target` will be replaced with the response. 
-[Volume filters form and report](http://servervm-web:8080/distributors/21005640#Volumes)
+When clicking the submit button, `Swapperoo` will submit the form via ajax and prevent a page reload. On a successful request, the `target` will be replaced with the response.
 
 **Click events**
-Clicking an element to fetch more data. The [list viewer](http://code.conklin.com/portal/aggregate/wikis/code/list-viewer) is one example of this, found on the [Orders page](http://servervm-web:8080/orders) with the abbreviated example below.
+Clicking an element to fetch more data.
 
 ```html
 <div class="row list-viewer" data-list-viewer>
     <div class="col-md-3 left">
         <table class="table table-hover table-sm">
             <tbody>
-                <tr data-swapperoo-id="A214744" data-swapperoo-target="#orderInfo" data-swapperoo-url="/api/orders/A214744" data-swapperoo-toggle-class="alert-info"></tr>
-                <tr data-swapperoo-id="A214743" data-swapperoo-target="#orderInfo" data-swapperoo-url="/api/orders/A214743" data-swapperoo-toggle-class="alert-info"></tr>
-                <tr data-swapperoo-id="A214741" data-swapperoo-target="#orderInfo" data-swapperoo-url="/api/orders/A214741" data-swapperoo-toggle-class="alert-info"></tr>
+                <tr data-swapperoo-id="12345" data-swapperoo-target="#target" data-swapperoo-url="/some/api/call/12345"></tr>
+                <tr data-swapperoo-id="12346" data-swapperoo-target="#target" data-swapperoo-url="/some/api/call/12346"></tr>
+                <tr data-swapperoo-id="12347" data-swapperoo-target="#target" data-swapperoo-url="/some/api/call/12347"></tr>
             </tbody>
         </table>
     </div>
     <div class="col-md-9 right">
         <div class="card">
             <div class="card-body">
-                <div id="orderInfo"></div>
+                <div id="target"></div>
             </div>
         </div>
     </div>
