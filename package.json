@@ -22,7 +22,7 @@
   },
   "homepage": "https://github.com/slimeygecko/swapperoo#readme",
   "devDependencies": {
-    "axios": "^0.18.1",
+    "axios": "^0.21.2",
     "cypress": "^3.1.5",
     "express": "^4.16.4",
     "terser": "3.14.1",
