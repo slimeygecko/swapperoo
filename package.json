@@ -25,12 +25,12 @@
     "axios": "^0.21.2",
     "cypress": "^3.1.5",
     "express": "^4.16.4",
-    "terser": "3.14.1",
+    "terser": "4.8.1",
     "wait-on": "^3.2.0",
     "webpack": "^4.29.0",
     "webpack-cli": "^3.2.1"
   },
   "resolutions": {
-    "terser": "3.14.1"
+    "terser": "4.8.1"
   }
 }
